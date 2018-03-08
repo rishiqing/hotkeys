@@ -203,6 +203,20 @@ function unbind(key, scope) {
   }
 }
 
+// 解绑ns对应的所有事件
+function unbindns(ns) {
+  if (!ns) return;
+  for (var code in _handlers) {
+    var list = _handlers[code];
+    if (list && list.length) {
+      for (var r = 0; r < list.length; r++) {
+        obj = list[r];
+        if (obj.ns === ns) list[r] = {};
+      }
+    }
+  }
+}
+
 // 循环删除handlers中的所有 scope(范围)
 function deleteScope(scope, newScope) {
   var key,
@@ -302,7 +316,13 @@ function clearModifier(event) {
 }
 
 // 主体hotkeys函数
-function hotkeys(key, scope, method) {
+function hotkeys(_key, scope, method) {
+  var nsIndex = _key.indexOf('|'); // 检查key里面是否有 | ，| 之后的都属于命名空间
+  var key = _key, ns = null;
+  if (nsIndex >= 0) {
+    key = _key.slice(0, nsIndex);
+    ns = _key.slice(nsIndex + 1);
+  }
   var keys = getKeys(key), // 需要处理的快捷键列表
     mods = [],
     i = 0;
@@ -332,7 +352,8 @@ function hotkeys(key, scope, method) {
       scope: scope,
       method: method,
       key: keys[i],
-      mods: mods
+      mods: mods,
+      ns: ns // 命名空间
     });
   }
 }
@@ -344,7 +365,8 @@ _api = {
   getPressedKeyCodes: getPressedKeyCodes,
   isPressed: isPressed,
   filter: filter,
-  unbind: unbind
+  unbind: unbind,
+  unbindns: unbindns
 };
 
 for (var a in _api) hotkeys[a] = _api[a];

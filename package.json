@@ -3,7 +3,7 @@
   "version": "2.0.8",
   "description": "A simple micro-library for defining and dispatching keyboard shortcuts. It has no dependencies.",
   "author": "kenny wang <wowohoo@qq.com>",
-  "main": "dist/hotkeys.min.js",
+  "main": "dist/hotkeys.js",
   "scripts": {
     "build:test": "browserify test/hotkeys.js | uglifyjs --compress --mangle  > test/hotkeys.test.js",
     "build:min": "umd hotkeys src/hotkeys.js | uglifyjs -mc | bannerjs -o > dist/hotkeys.min.js",
